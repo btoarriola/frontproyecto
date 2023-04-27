@@ -52,6 +52,7 @@
 .Puertas .lucesBlock{
   display: flex;
   flex-direction: column;
+  overflow: auto;
 }
 
 .Puertas .lucesBotonOff {

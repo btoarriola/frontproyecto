@@ -1,28 +1,44 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
-import { NavLink} from 'react-router-dom';
-import { MdLightbulb } from 'react-icons/md';
-import { MdLightbulbOutline } from 'react-icons/md';
-import { MdKeyboardArrowRight } from 'react-icons/md';
-import Boton from '../../../assets/img/botonalerta.svg';
+import { useState} from 'react';
+import { MdWbTwighlight } from 'react-icons/md';
 
 import './alerta.css';
 import Header from '../../common/Header'
 
 function Alerta() {
-    const [puertasData, setpuertasData] = useState([]);
-    useEffect(() => {
-        const jsonluces = [{"nombre":"cocina","estado":false,"brillo":0},{"nombre":"dormitorio","estado":true,"brillo":100},{"nombre":"Mesa de estudio","estado":false,"brillo":0},{"nombre":"Cuarto 2","estado":false,"brillo":0},{"nombre":"Sala","estado":false,"brillo":50},{"nombre":"Garaje","estado":true,"brillo":60},{"nombre":"Cuarto invitados","estado":true,"brillo":73},{"nombre":"Comedor","estado":true,"brillo":84},{"nombre":"Exterior","estado":true,"brillo":100}];
-        setpuertasData(jsonluces);
-    },[]);
+    const [numLlamada, setNumLlamada] = useState('');
+    const [numMensaje, setNumMensaje] = useState('');
+    const [mensaje, setMensaje] = useState('');
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(numLlamada, numMensaje, mensaje);
+    }
   
   return (
       <div className="Alerta">
         <Header/>
         <span id="title">Alerta</span>
         <div id="alertacontainer">
-            <div className='botonalerta'>
-                <Boton/>
+            <form onSubmit={handleSubmit}>
+                <div>
+                    <p className="nota">Se llamará al número si activa el botón de alerta</p>
+                    <input type="number" value={numLlamada} onChange={(e) => setNumLlamada(e.target.value)} placeholder=' Introduzca el numero de telefono'/>
+                    
+                </div>
+                <div>
+                    <p className="nota">Se enviará el mensaje si activa el botón de alerta</p>
+                    <input type="number" value={numMensaje} onChange={(e) => setNumMensaje(e.target.value)} placeholder=' Introduzca el numero de telefono'/>
+                </div>
+                <div>
+                <p className="nota">Escriba el mensaje a enviar.</p>
+                    <textarea value={mensaje} onChange={(e) => setMensaje(e.target.value)} placeholder='Introduzca el mensaje'/>
+                </div>
+                <button type="submit" className='botonaplicar'>Aplicar</button>
+            </form>
+
+            <div className='botoncontainer'>
+                <MdWbTwighlight size={110} id="iconboton"/>
             </div>
         </div>
       </div>

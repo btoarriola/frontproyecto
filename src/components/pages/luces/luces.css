@@ -52,6 +52,7 @@
 .Luces .lucesBlock{
   display: flex;
   flex-direction: column;
+  overflow: auto;
 }
 
 .Luces .lucesBotonOff {
@@ -81,6 +82,7 @@
   background-color: rgb(255, 255, 255);
   padding: 7px 12px;
   min-height: var(--alto);
+
 }
 .Luces .btitle{
   text-decoration: none;

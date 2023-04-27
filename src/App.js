@@ -6,6 +6,7 @@ import Inicio from './components/pages/inicio';
 import Luces from './components/pages/luces';
 import Puertas from './components/pages/puertas';
 import Alerta from './components/pages/alerta';
+import LucesEdit from './components/pages/luces/edit';
 
 function App() {
   return (
@@ -17,6 +18,10 @@ function App() {
           <Route path="/luces" element={<Luces />} />
           <Route path="/puertas" element={<Puertas />} />
           <Route path="/alerta" element={<Alerta />} />
+
+          {/*Rutas para luces*/}
+          <Route path="/luces/edit" element={<LucesEdit />} />
+
         </Routes>
       </div>
     </BrowserRouter>
