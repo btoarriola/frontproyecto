@@ -1,6 +1,6 @@
 import React from 'react';
 import Toggle from 'react-toggle';
-import {Slide,Slider} from '@mui/material';
+import {Slider} from '@mui/material';
 import 'react-toggle/style.css';
 import { useState, useEffect, useRef} from 'react';
 import { NavLink} from 'react-router-dom';
@@ -31,12 +31,12 @@ function LucesEdit() {
     const imgRef = useRef(null);
 
     useEffect(() => {
-      setlucesData({
-        ...lucesData,
+      setlucesData(l => ({
+        ...l,
         estado: isChecked,
         brillo: value,
         color: selectedColor
-      });
+      }));
     }, [isChecked, selectedColor, value]);
 
     //Este es para el tonggle switch
@@ -175,7 +175,7 @@ function LucesEdit() {
           <div id="colorcontrolcontainer">
             <span className="btitle">Color</span>
             <div className='imgColor'>
-              <img src={colores} id='colores' onClick={handleColorPicker} ref={imgRef}/>
+              <img src={colores} id='colores' onClick={handleColorPicker} ref={imgRef} alt='imgColor'/>
               {selectedColor && (
                 <div id="circulo"
                   style={{
