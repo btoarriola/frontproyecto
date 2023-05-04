@@ -7,6 +7,7 @@ import Luces from './components/pages/luces';
 import Puertas from './components/pages/puertas';
 import Alerta from './components/pages/alerta';
 import LucesEdit from './components/pages/luces/edit';
+import PuertasOpen from './components/pages/puertas/open';
 
 function App() {
   return (
@@ -21,6 +22,9 @@ function App() {
 
           {/*Rutas para luces*/}
           <Route path="/luces/edit" element={<LucesEdit />} />
+
+          {/*Ruta para abrir las puertas*/}
+          <Route path="/puertas/open" element={<PuertasOpen />} />
 
         </Routes>
       </div>

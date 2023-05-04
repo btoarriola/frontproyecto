@@ -1,5 +1,4 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
 import { NavLink} from 'react-router-dom';
 import { MdMenu } from 'react-icons/md';
 import './Header.css';

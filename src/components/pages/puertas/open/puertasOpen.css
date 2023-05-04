@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css?family=Product+Sans');
+:root {
+  --screen-width: calc(100vw - 16px);
+  --alto: calc(var(--screen-width)/4.5);
+}
+
+.PuertasOpen {
+  background-image: url('../../../../assets/img/bgpuertas.png');
+  background-size: cover;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-attachment: fixed;
+  margin: 0;
+  padding-bottom: 15px;
+  padding-top: 85px;
+  font-family:'Product Sans', sans-serif;
+  }
+
+  .PuertasOpen #title{
+    color:aliceblue;
+    font-size: 3.5vh;
+    font-weight:500;
+    padding-left: 0px;
+    margin-top: -4px;
+  }
+
+  .PuertasOpen .fotoboton{
+    width: 50%;
+  padding-top: 50%;
+  position: relative;
+  background-color: red;
+
+  }

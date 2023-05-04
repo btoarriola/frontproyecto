@@ -32,7 +32,7 @@ function Puertas() {
             <div id="luzGrid">
                 {puertasData.map((puertasObj) => (
                     <div key={puertasObj.nombre} className="lucesBlock">
-                    <NavLink activeClassName="active" to="/alerta" className={puertasObj.estado ? "lucesBotonOn" : "lucesBotonOff"}>
+                    <NavLink activeClassName="active" to="/puertas/open" className={puertasObj.estado ? "lucesBotonOn" : "lucesBotonOff"}>
                     {puertasObj.estado ? (
                         <MdSensorDoor size={45} style={{ color: "c00000" }} />
                         ) : (
