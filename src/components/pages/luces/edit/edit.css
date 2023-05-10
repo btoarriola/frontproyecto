@@ -9,10 +9,9 @@
   background-size: cover;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 50vh;
   background-attachment: fixed;
   margin: 0;
-  padding-bottom: 15px;
   padding-top: 80px;
   font-family:'Product Sans', sans-serif;
   }
