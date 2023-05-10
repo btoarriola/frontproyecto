@@ -37,7 +37,7 @@ function Navbar() {
           </NavLink>
         </li>
         <li>
-          <NavLink activeClassName="active" to="/perfil">
+          <NavLink activeClassName="active" to="/usuario">
             <MdAccountCircle size={30}  />
             <span>Usuario</span>
           </NavLink>
