@@ -9,6 +9,7 @@ import Alerta from './components/pages/alerta';
 import Usuario from './components/pages/usuario';
 import LucesEdit from './components/pages/luces/edit';
 import PuertasOpen from './components/pages/puertas/open';
+import EditCasa from './components/pages/usuario/editcasa';
 
 function App() {
   return (
@@ -27,6 +28,9 @@ function App() {
 
           {/*Ruta para abrir las puertas*/}
           <Route path="/puertas/open" element={<PuertasOpen />} />
+
+          {/*Ruta para editar*/}
+          <Route path="/usuario/editcasa" element={<EditCasa />} />
 
         </Routes>
       </div>

@@ -79,7 +79,7 @@ function Usuario() {
                             <span className="bsubtitle">Editar perfil</span>
                         </span>
                     </NavLink>
-                    <NavLink activeClassName="active" to="/alerta" className="conbuttonsbig">
+                    <NavLink activeClassName="active" to="/usuario/editcasa" className="conbuttonsbig">
                         <MdEditSquare size={36} style={{ color: "#000" }}/>
                         <span className="btitle">Casa</span>
                         <span className="bsubtitle">Rediseña tu casa</span>
