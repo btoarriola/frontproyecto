@@ -1,49 +1,57 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { NavLink} from 'react-router-dom';
-import { MdLightbulb } from 'react-icons/md';
-import { MdLightbulbOutline } from 'react-icons/md';
-import { MdKeyboardArrowRight } from 'react-icons/md';
-import { MdAdd } from 'react-icons/md';
-
+import React, { useEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import { MdLightbulb, MdLightbulbOutline, MdKeyboardArrowRight, MdAdd } from 'react-icons/md';
 import './luces.css';
-import Header from '../../common/Header'
+import Header from '../../common/Header';
+import apic from '../../../services/api';
 
 function Luces() {
-    const [lucesData, setlucesData] = useState([]);
-    useEffect(() => {
-        const jsonluces = [{"nombre":"cocina","estado":false,"brillo":0},{"nombre":"dormitorio","estado":true,"brillo":100},{"nombre":"Mesa de estudio","estado":false,"brillo":0},{"nombre":"Cuarto 2","estado":false,"brillo":0},{"nombre":"Sala","estado":false,"brillo":50},{"nombre":"Garaje","estado":true,"brillo":60},{"nombre":"Cuarto invitados","estado":true,"brillo":73},{"nombre":"Comedor","estado":true,"brillo":84},{"nombre":"Exterior","estado":true,"brillo":100}];
-        setlucesData(jsonluces);
-    },[]);
-  
+  const [luces, setLuces] = useState([]);
+
+  useEffect(() => {
+    fetchLuces();
+  }, []);
+
+  const fetchLuces = async () => {
+    try {
+      const lucesData = await apic.get('/luces/');
+      setLuces(lucesData.luces);
+      console.log("Respuesta de la API:", lucesData);
+    } catch (error) {
+      console.error('Error al obtener las luces:', error);
+    }
+  };
+
   return (
-      <div className="Luces">
-        <Header/>
-        <span id="title">Mis Luces</span>
-        <div id="lucescontainer">
-            <div id="luzGrid">
-                {lucesData.map((lucesObj) => (
-                    <div key={lucesObj.nombre} className="lucesBlock">
-                        <NavLink activeClassName="active" to="/luces" className={lucesObj.estado ? "lucesBotonOn" : "lucesBotonOff"}>
-                        {lucesObj.estado ? (
-                            <MdLightbulb size={45} style={{ color: "f69200" }} />
-                            ) : (
-                            <MdLightbulbOutline size={45} style={{ color: "black" }} />
-                            )}
-                        <span className="btitle">{lucesObj.nombre}</span>
-                        </NavLink>
-                        <NavLink activeClassName="active" to="/luces/edit" className="lucesAjustes">
-                            <span className="bsubtitle">{lucesObj.brillo}%</span>
-                            <MdKeyboardArrowRight size={20} style={{ color: "#2141df" }} />
-                        </NavLink>
-                    </div>
-                ))}
+    <div className="Luces">
+      <Header />
+      <span id="title">Mis Luces</span>
+      <div id="lucescontainer">
+        <div id="luzGrid">
+          {luces.map((lucesObj) => (
+            <div key={lucesObj._id} className="lucesBlock">
+              <NavLink activeClassName="active" to="/luces" className={lucesObj.estado ? "lucesBotonOn" : "lucesBotonOff"}>
+                {lucesObj.estado ? (
+                  <MdLightbulb size={45} style={{ color: "#f69200" }} />
+                ) : (
+                  <MdLightbulbOutline size={45} style={{ color: "black" }} />
+                )}
+                <span className="btitle">{lucesObj.nombre}</span>
+              </NavLink>
+              <NavLink activeClassName="active" to={`/luces/edit/${lucesObj._id}`} className="lucesAjustes">
+                <span className="bsubtitle">{lucesObj.brillo}%</span>
+                <MdKeyboardArrowRight size={20} style={{ color: "#2141df" }} />
+              </NavLink>
             </div>
-            <div className='addBoton'>
-                <MdAdd size={42}/>
-            </div>
+          ))}
         </div>
+        <NavLink activeClassName="active" to="/luces/new" className="lucesNew">
+          <div className="addBoton">
+            <MdAdd size={42} />
+          </div>
+        </NavLink>
       </div>
+    </div>
   );
 }
 

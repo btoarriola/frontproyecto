@@ -30,4 +30,5 @@ class Api {
   }
 }
 
-export default new Api('https://api.example.com');
+const apic = new Api('http://192.168.1.79:3001');
+export default apic;

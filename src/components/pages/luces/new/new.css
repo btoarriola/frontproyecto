@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css?family=Product+Sans');
+:root {
+  --screen-width: calc(100vw - 16px);
+  --alto: calc(var(--screen-width)/4.5);
+}
+
+.LucesNew {
+  background-image: url('../../../../assets/img/bgluces.png');
+  background-size: cover;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-attachment: fixed;
+  margin: 0;
+  padding-bottom: 15px;
+  padding-top: 94px;
+  font-family:'Product Sans', sans-serif;
+  }
+
+.LucesNew #title{
+    color:aliceblue;
+    font-size: 40px;
+    font-weight:500;
+    padding-left: 0px;
+}
+.LucesNew #subtitle{
+  color:aliceblue;
+  font-size: 26px;
+  letter-spacing: 0.2px;
+  font-weight:500;
+}
+
+.LucesNew #lucescontainer{
+  margin-top: 10%;
+  border-top-right-radius: 27px;
+  border-top-left-radius: 27px;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 15px;
+  padding-top: 14%;
+  padding-bottom: 40px;
+  min-height:77dvh;
+    
+}
