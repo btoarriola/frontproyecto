@@ -5,11 +5,11 @@ import "react-toggle/style.css";
 import { NavLink, useParams } from "react-router-dom";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdOutlineWbSunny, MdSunny, MdBrightnessAuto, MdBrightnessHigh,MdBrightnessLow } from "react-icons/md";
 import colores from "../../../../assets/img/colores.png";
-
+import mqttConnection from "../../../../services/mqttConection";
+import mqtt from 'mqtt-browser';
 import "./edit.css";
 import Header from "../../../common/Header";
 import Navbar from "../../../common/Navbar";
-import mqtt from "mqtt-browser";
 import apic from "../../../../services/api";
 import Cookies from 'universal-cookie';
 
@@ -53,34 +53,24 @@ function LucesEdit() {
     };
     fetchData();
   },[id]);
-
+  const shouldRenderControls = brillo !== undefined && estado !== undefined;
   // ----------------------------- conexion con mqtt -----------------------------------------
-
-  const client = mqtt.connect("ws://192.168.1.81:8083/mqtt"); //ws://192.168.1.81:8083/mqtt
+  //const client = mqttConnection();
+  const client = mqtt.connect("ws://localhost:8083/mqtt"); //ws://192.168.1.81:8083/mqtt
   client.on("connect", () => {
-    console.log("Conectado al broker");
-    client.subscribe("domotica/luz/on-off", (err) => {
-      if (err) {console.error("Error al suscribirse al topic de encendido/apagado:",err);} 
-      else {console.log("Suscripción exitosa al topic de on-off");}
-    });
-
-    client.subscribe("domotica/luz/brillo", (err) => {
-      if (err) {console.error("Error al suscribirse al topic de brillo:", err);} 
-      else {console.log("Suscripción exitosa al topic de brillo");}
-    });
-
-    client.subscribe("domotica/luz/color", (err) => {
-      if (err) {console.error("Error al suscribirse al topic de color:", err);} 
-      else {console.log("Suscripción exitosa al topic de color");}
-    });
+    if(shouldRenderControls){
+      const nombretopic = lucesData.nombre.toLowerCase().replace(/\s/g, "");
+      client.subscribe(`domotica/luz/${nombretopic}`, (err) => {
+        if (err) {console.error("Error al suscribirse al topic de domotica/luz/sala:",err);} 
+        else {console.log("Suscripción exitosa al topic domotica/luz/sala");}
+      });
+  }
   });
-
-
 
   //-------------------------------------- Metodo y funciones  --------------------------------------------
 
     //Encendido y apagado de las luces
-    const handleToggle = (event) => {
+    const handleToggle = () => {
       const newEstado = !estado; // Obtener el nuevo valor de estado
       setEstado(newEstado); // Actualizar el estado
       console.log("Estado de la luz:", newEstado);
@@ -90,15 +80,6 @@ function LucesEdit() {
         ...prevData,
         estado: newEstado
       }));
-
-      // Publicar el estado en el broker MQTT
-      client.publish("domotica/luz/on-off", newEstado, (err) => {
-        if (err) {
-          console.error("Error al enviar el mensaje al broker:", err);
-        } else {
-          console.log("Mensaje enviado al broker correctamente");
-        }
-      });
     };
   
       //Intensidad de la luz
@@ -110,13 +91,6 @@ function LucesEdit() {
         ...prevData,
         brillo: brillo
       }));
-      client.publish("domotica/luz/brillo", brillo.toString(), (err) => {
-        if (err) {
-          console.error("Error al enviar el mensaje al broker:", err);
-        } else {
-          console.log("Mensaje enviado al broker correctamente");
-        }
-      });
       setShowValue(true);
     };
   
@@ -151,8 +125,6 @@ function LucesEdit() {
         ...prevData,
         color: color
       }));
-      console.log("Cambiando el brillo:", color);
-      client.publish("domotica/luz/color", color.toString());
     }
   
     function handleColorSelect(botonColor) {
@@ -209,28 +181,11 @@ function LucesEdit() {
         y: "45%",
       });
     }
-  
+    
   useEffect(() => {
     //conexion MQTT
     client.on("message", (topic, message) => {
       console.log("Mensaje recibido en el topic ",topic,":",message.toString());
-
-      if (topic === "domotica/luz/on-off") {
-        const estadoLuz = JSON.parse(message.toString()).estado;
-        setEstado(!estadoLuz);
-        console.log("La luz se encuentra:", estadoLuz);
-      }
-
-      if (topic === "domotica/luz/brillo") {
-        const nuevoBrillo = parseInt(message.toString());
-        if (isNaN(nuevoBrillo)) {
-          console.error("Valor de brillo inválido:", message.toString());
-          return;
-        }
-        setBrillo(nuevoBrillo);
-        console.log("El brillo actual es:", nuevoBrillo);
-        //Aqui se actualiza el valor del brillo actualizarRangoBrillo();
-      }
     });
 
     return () => {
@@ -241,6 +196,20 @@ function LucesEdit() {
 
   const putLuces = async (data) => {
     try{console.log("Data desde el put",data);
+    const brokerdata = {
+      id: id,
+      ...data, // Copia todas las propiedades de "data" en "brokerdata"
+    };
+    if(shouldRenderControls){
+      const nombreFormateado = data.nombre.toLowerCase().replace(/\s/g, "");
+      client.publish(`domotica/luz/${nombreFormateado}`, brokerdata.toString(), (error) => {
+        if (error) {
+          console.error('Error al publicar el mensaje:', error);
+        } else {
+          console.log(`>>>>>> publicado correctamente a ${nombreFormateado}  :`,brokerdata);
+        }
+      });
+    }
     await apic.put('/luces/'+id, data);}
     catch (error) {
       console.error('Error enviar las luces:', error);
@@ -250,7 +219,7 @@ function LucesEdit() {
 
   console.log("lucesData",lucesData);
   putLuces(lucesData);
-  const shouldRenderControls = brillo !== undefined && estado !== undefined;
+  
 
   return (
     <div className="LucesEdit">

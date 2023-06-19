@@ -23,8 +23,8 @@ function Usuario() {
     const [usuario] = useState({
         nombre: cookie.get('nombre'),
         email: cookie.get('correo'),
-        telefono: cookie.get('telefono'),
-        direccion: "Av principal no 8 col principal",
+        telefono: cookie.get('telefonousuario') || '[llenar este campo]',
+        direccion: cookie.get('direccion') || '[llenar este campo]',
         hab: 4
       });
     
