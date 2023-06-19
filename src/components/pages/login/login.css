@@ -5,26 +5,31 @@
   --botonalto: calc(var(--screen-width)/5);
 }
 
-.loginClass {
-  background-color: red;
-  justify-content: center;
+.loginIndex {
+  background-color: #2d324e;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  background-attachment: fixed;
+  height: 100vh;
   margin: 0;
-  padding-bottom: 15px;
   font-family:'Product Sans', sans-serif;
   }
 
-.loginClass .input{
-    background-color: rgb(181, 181, 181);
-    border: none;
-    outline: none;
-    font-size: 17px;
-    color:black;
-    padding: 10px 8px;
-    border-radius: 12px;
-    width: 93%;
-    font-family:'Product Sans', sans-serif;
-    margin-top: 3px;
-    margin-bottom: 5px;
+.loginIndex .logologin{
+    width: 30%;
+}
+.loginIndex .letraslogin{
+    width: 40%;
+}
+
+.loginIndex .logocontainer{
+  width: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 20%;
+  padding-bottom: 13%;
+  border-radius: 0 0 40% 40%;
 }

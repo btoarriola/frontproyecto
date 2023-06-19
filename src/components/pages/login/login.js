@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import apic from '../../../services/api';
 import Cookies from 'universal-cookie';
-import './login.css';
+import './component.css';
 
 const cookie = new Cookies();
 function Login() {
@@ -52,13 +52,14 @@ function Login() {
  
   console.log("acutal",form);
   return (
-    <div className="loginClass">
+    <div className="component">
+      <p id="title">LogIn</p>
       <label>Correo</label>
-      <input type="text" name="email" onChange={handleChange} className="input"/>
+      <input type="email" name="email" onChange={handleChange} className="input"/>
       <label>Contraseña</label>
       <input type="password" name="password" onChange={handleChange} className="input"/>
 
-      <button onClick={iniciarSesion}>Iniciar sesión</button>
+      <button onClick={iniciarSesion} className="button">Iniciar sesión</button>
     </div>
   );
 }

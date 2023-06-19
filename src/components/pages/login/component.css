@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css?family=Product+Sans');
+:root {
+  --screen-width: calc(100vw - 16px);
+  --alto: calc(var(--screen-width)/4.5);
+  --botonalto: calc(var(--screen-width)/5);
+}
+
+.component {
+  background-color: white;
+  justify-content: center;
+  align-items: center;
+  background-attachment: fixed;
+  margin: 0;
+  margin-top: -5%;
+  padding-bottom: 15px;
+  font-family:'Product Sans', sans-serif;
+  width: 80%;
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0 0 17px 2px rgba(0, 0, 0, 0.604);
+  }
+
+.component .input{
+    background-color: rgb(210, 209, 209);
+    border: none;
+    outline: none;
+    font-size: 17px;
+    color:black;
+    padding: 10px 8px;
+    border-radius: 12px;
+    width: 93%;
+    font-family:'Product Sans', sans-serif;
+    margin-top: 3px;
+    margin-bottom: 5px;
+}
+
+.component #title{
+  margin:7px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #2141df;
+}
+
+.component .button{
+  background-color: #2141df;
+    border: none;
+    outline: none;
+    font-size: 17px;
+    color:white;
+    padding: 10px 8px;
+    border-radius: 12px;
+    width: 98%;
+    font-family:'Product Sans', sans-serif;
+    margin-top: 20px;
+    margin-bottom: 12px;
+}
