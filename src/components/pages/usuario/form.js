@@ -5,7 +5,11 @@ import Cookies from 'universal-cookie';
 
 const cookie = new Cookies();
 function Forma(props) {
-  const [actUsuario, setActUsuario] = useState(props.usuario);
+  const [actUsuario, setActUsuario] = useState({
+    telefono: cookie.get('telefonousuario'),
+    direccion: cookie.get('direccion')
+  });
+  
 
   const aceptSubmit = (e) => {
     e.preventDefault();
@@ -27,11 +31,7 @@ function Forma(props) {
     }));
   };
   const getData = async () => {
-    await apic.put('/puertas/', {
-      id: cookie.get('id'),
-      nombre: actUsuario.nombre,
-      estado: !actUsuario.estado
-    });
+    
   };
 
   return (
@@ -46,10 +46,6 @@ function Forma(props) {
         </button>
       </div>
       <div className="formcontainer">
-        <div>
-          <p className="nota">Nombre de la casa</p>
-          <input type="text" name="nombre" value={actUsuario.nombre} onChange={handleChange} />
-        </div>
         <div>
           <p className="nota">Telefono Celular</p>
           <input type="number" name="telefono" value={actUsuario.telefono} onChange={handleChange} />

@@ -6,6 +6,7 @@ import Header from '../../../common/Header';
 import './puertasOpen.css';
 import apic from "../../../../services/api";
 import Cookies from "universal-cookie";
+import mqtt from 'mqtt-browser';
 
 const cookie = new Cookies();
 function PuertasOpen() {
@@ -35,6 +36,20 @@ function PuertasOpen() {
     };
     getData();
   },[id]);
+  const shouldRenderControls = puertaData.nombre !== undefined;
+  // ----------------------------- conexion con mqtt -----------------------------------------
+  //const client = mqttConnection();
+  const client = mqtt.connect("ws://localhost:8083/mqtt"); //ws://192.168.1.81:8083/mqtt
+  client.on("connect", () => {
+    if(shouldRenderControls){
+      const nombretopic = puertaData.nombre.toLowerCase().replace(/\s/g, "");
+      client.subscribe(`domotica/puerta/${nombretopic}`, (err) => {
+        if (err) {console.error("Error al suscribirse al topic de domotica/luz/sala:",err);} 
+        else {console.log("!!Suscripción exitosa al topic domotica/puerta/");}
+      });
+  }
+  });
+
 
   const tomarFoto = async () => {
     setPuertaData(prevData => ({
@@ -47,14 +62,44 @@ function PuertasOpen() {
       nombre: puertaData.nombre,
       estado: !puertaData.estado
     });
+    const brokerdata = {
+      id: id,
+      nombre: puertaData.nombre,
+      estado: !puertaData.estado,
+    };
+
+    if(shouldRenderControls){
+      console.log("DATA ", brokerdata);
+      const nombreFormateado = puertaData.nombre.toLowerCase().replace(/\s/g, "");
+      console.log("Identificar ",nombreFormateado);
+      client.publish(`domotica/puerta/${nombreFormateado}`, brokerdata.toString(), (error) => {
+        if (error) {
+          console.error('Error al publicar el mensaje:', error);
+        } else {
+          console.log(`>>>>>> publicado correctamente a ${nombreFormateado}  :`,brokerdata);
+        }
+      });
+    }
 
     const captura = webcamRef.current.getScreenshot();
     setImagen(captura);
 
     setTimeout(() => {
+      client.end(); // Cerrar la conexión MQTT al desmontar el componente
       window.location.href = "/puertas";
-    }, 900);
+    }, 1000);
   };
+
+  useEffect(() => {
+    //conexion MQTT
+    client.on("message", (topic, message) => {
+      console.log("Mensaje recibido en el topic ",topic,":",message.toString());
+    });
+
+    
+
+  }, [client]);
+
   console.log(puertaData);
   return (
     <div className="PuertasOpen">
