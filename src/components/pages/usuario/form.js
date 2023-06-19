@@ -14,6 +14,7 @@ function Forma(props) {
   const aceptSubmit = (e) => {
     e.preventDefault();
     console.log(actUsuario);
+    getData();
     //Aqui se enviará al api
     props.setIsOpen(false);
   };
@@ -31,6 +32,8 @@ function Forma(props) {
     }));
   };
   const getData = async () => {
+    cookie.set('telefonousuario',actUsuario.telefono,{path:"/"});
+    cookie.set('direccion',actUsuario.direccion,{path:"/"});
     
   };
 

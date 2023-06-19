@@ -20,14 +20,20 @@ function Usuario() {
         }
       }, []);
 
-    const [usuario] = useState({
+      const [usuario, setUsuario] = useState({
         nombre: cookie.get('nombre'),
         email: cookie.get('correo'),
         telefono: cookie.get('telefonousuario') || '[llenar este campo]',
         direccion: cookie.get('direccion') || '[llenar este campo]',
         hab: 4
       });
-    
+      useEffect(() => {
+        setUsuario(prevUsuario => ({
+          ...prevUsuario,
+          telefono: cookie.get('telefonousuario') || '[llenar este campo]',
+          direccion: cookie.get('direccion') || '[llenar este campo]'
+        }));
+      }, []);  
       const [isOpen, setIsOpen] = useState(false);
     
       const handleButtonClick = (e) => {
