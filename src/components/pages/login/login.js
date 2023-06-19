@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import apic from '../../../services/api';
 import Cookies from 'universal-cookie';
+import './login.css';
 
 const cookie = new Cookies();
 function Login() {
@@ -20,14 +21,19 @@ function Login() {
   const iniciarSesion = async ()=>{
     console.log("holaa inicio sesion");
     try{
-        const user = await apic.get('/usuario/', {params: {email: form.email, password: form.password}})
-        console.log(user.usuario);
-        if(user.usuario>0){
-            var usuario = user.usuario;
-            cookie.set('id',usuario.id,{path:"/"});
+        const data={correo: form.email,contraseña: form.password}
+        console.log(data);
+        const user = await apic.post('/usuarios/login/', data);
+        var usuario = user.usuario;
+        console.log(usuario);
+        if(usuario.correo===form.email && usuario.contraseña===form.password ){
+            console.log("bienvenido")
+            cookie.set('id',usuario._id,{path:"/"});
             cookie.set('nombre',usuario.nombre,{path:"/"});
-            cookie.set('correo',usuario.email,{path:"/"});
+            cookie.set('correo',usuario.correo,{path:"/"});
             cookie.set('telefono',usuario.telefono,{path:"/"});
+            console.log(cookie.get('id'));
+            window.location.href="./home";
 
         }else{
             alert("Usuario o contraseña ivalido")
@@ -37,13 +43,20 @@ function Login() {
       }
   };
 
+  useEffect(() => {
+    if (cookie.get('id')) {
+      alert("ya estas logeado");
+      window.location.href = "./home";
+    }
+  }, []);
+ 
   console.log("acutal",form);
   return (
     <div className="loginClass">
       <label>Correo</label>
-      <input type="text" name="email" onChange={handleChange} />
+      <input type="text" name="email" onChange={handleChange} className="input"/>
       <label>Contraseña</label>
-      <input type="password" name="password" onChange={handleChange} />
+      <input type="password" name="password" onChange={handleChange} className="input"/>
 
       <button onClick={iniciarSesion}>Iniciar sesión</button>
     </div>

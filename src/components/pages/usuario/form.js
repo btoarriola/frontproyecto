@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import './usuario.css';
+import apic from '../../../services/api';
+import Cookies from 'universal-cookie';
 
+const cookie = new Cookies();
 function Forma(props) {
   const [actUsuario, setActUsuario] = useState(props.usuario);
 
@@ -23,6 +26,13 @@ function Forma(props) {
       [name]: value,
     }));
   };
+  const getData = async () => {
+    await apic.put('/puertas/', {
+      id: cookie.get('id'),
+      nombre: actUsuario.nombre,
+      estado: !actUsuario.estado
+    });
+  };
 
   return (
     <div className="menu">
@@ -39,10 +49,6 @@ function Forma(props) {
         <div>
           <p className="nota">Nombre de la casa</p>
           <input type="text" name="nombre" value={actUsuario.nombre} onChange={handleChange} />
-        </div>
-        <div>
-          <p className="nota">Correo electronico</p>
-          <input type="email" name="email" value={actUsuario.email} onChange={handleChange} />
         </div>
         <div>
           <p className="nota">Telefono Celular</p>

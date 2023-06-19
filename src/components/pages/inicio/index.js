@@ -11,6 +11,7 @@ import { MdEditSquare } from 'react-icons/md';
 import './inicio.css';
 import houseimg from '../../../assets/img/house.png';
 import HeaderInicio from './HeaderInicio';
+import Navbar from '../../common/Navbar';
 
 function Inicio() {
     const cantluces= 3;
@@ -18,6 +19,7 @@ function Inicio() {
   return (
       <div className="Inicio">
         <HeaderInicio/>
+        <Navbar />
         <span id="title">Mi Casa</span>
         <div id="housecontainer">
             <img src={houseimg} alt="houseimg" />

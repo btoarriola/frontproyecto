@@ -1,10 +1,12 @@
 import React from 'react';
 import { useState } from 'react';
-import { MdWbTwighlight } from 'react-icons/md';
-
+import { MdWbTwighlight,MdSave } from 'react-icons/md';
 import './alerta.css';
-import Header from '../../common/Header'
+import Header from '../../common/Header';
+import Navbar from '../../common/Navbar';
+import Cookies from 'universal-cookie';
 
+const cookie = new Cookies();
 function Alerta() {
   const [formData, setFormData] = useState({
     numLlamada: '',
@@ -15,6 +17,7 @@ function Alerta() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
+    cookie.set('telefono',formData.numLlamada,{path:"/"});
   }
 
   const handleChange = (e) => {
@@ -28,6 +31,7 @@ function Alerta() {
   return (
     <div className="Alerta">
       <Header/>
+      <Navbar />
       <span id="title">Alerta</span>
       <div id="alertacontainer">
         <form onSubmit={handleSubmit}>
@@ -43,7 +47,10 @@ function Alerta() {
             <p className="nota">Escriba el mensaje a enviar.</p>
             <textarea name="mensaje" value={formData.mensaje} onChange={handleChange} placeholder='Introduzca el mensaje'/>
           </div>
-          <button type="submit" className='botonaplicar'>Aplicar</button>
+          <button type="submit" className='botonaplicar'>
+            <MdSave size={25} style={{ color: "#2141df" }}/>
+            <span style={{marginLeft:'4px'}}>Aplicar</span>
+          </button>
         </form>
 
         <div className='botoncontainer'>

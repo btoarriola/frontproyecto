@@ -1,22 +1,29 @@
 import React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink} from 'react-router-dom';
 import { MdAirlineSeatIndividualSuite } from 'react-icons/md';
 import { MdEditSquare } from 'react-icons/md';
 import { MdWbIncandescent } from 'react-icons/md';
 import { MdPerson } from 'react-icons/md';
-
-
 import userimg from '../../../assets/img/userimg.jpeg';
 import './usuario.css';
-import Header from '../../common/Header'
+import Header from '../../common/Header';
+import Navbar from '../../common/Navbar';
 import Forma from './form.js';
+import Cookies from 'universal-cookie';
+
+const cookie = new Cookies();
 function Usuario() {
-    
+    useEffect(() => {
+        if (!cookie.get("id")) {
+          window.location.href = "./";
+        }
+      }, []);
+
     const [usuario] = useState({
-        nombre: "Casa de betoarriola",
-        email: 'betokanon@gmail.com',
-        telefono: 2722607274,
+        nombre: cookie.get('nombre'),
+        email: cookie.get('correo'),
+        telefono: cookie.get('telefono'),
         direccion: "Av principal no 8 col principal",
         hab: 4
       });
@@ -35,6 +42,7 @@ function Usuario() {
   return (
       <div className="Usuario">
         <Header/>
+        <Navbar />
         {isOpen && (
         <Forma
           usuario={usuario}

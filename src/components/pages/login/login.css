@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css?family=Product+Sans');
+:root {
+  --screen-width: calc(100vw - 16px);
+  --alto: calc(var(--screen-width)/4.5);
+  --botonalto: calc(var(--screen-width)/5);
+}
+
+.loginClass {
+  background-color: red;
+  justify-content: center;
+  align-items: center;
+  background-attachment: fixed;
+  margin: 0;
+  padding-bottom: 15px;
+  font-family:'Product Sans', sans-serif;
+  }
+
+.loginClass .input{
+    background-color: rgb(181, 181, 181);
+    border: none;
+    outline: none;
+    font-size: 17px;
+    color:black;
+    padding: 10px 8px;
+    border-radius: 12px;
+    width: 93%;
+    font-family:'Product Sans', sans-serif;
+    margin-top: 3px;
+    margin-bottom: 5px;
+}

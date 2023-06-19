@@ -3,14 +3,23 @@ import { NavLink } from 'react-router-dom';
 import { MdLightbulb, MdLightbulbOutline, MdKeyboardArrowRight, MdAdd } from 'react-icons/md';
 import './luces.css';
 import Header from '../../common/Header';
+import Navbar from '../../common/Navbar';
 import apic from '../../../services/api';
+import Cookies from "universal-cookie";
 
+const cookie = new Cookies();
 function Luces() {
   const [luces, setLuces] = useState([]);
 
   useEffect(() => {
     fetchLuces();
+    if (!cookie.get("id")) {
+      window.location.href = "./";
+    }
   }, []);
+  /*
+  agregar un message para nuevas luces 
+  */
 
   const fetchLuces = async () => {
     try {
@@ -25,6 +34,7 @@ function Luces() {
   return (
     <div className="Luces">
       <Header />
+      <Navbar />
       <span id="title">Mis Luces</span>
       <div id="lucescontainer">
         <div id="luzGrid">

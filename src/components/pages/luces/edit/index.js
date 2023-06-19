@@ -1,51 +1,25 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Toggle from "react-toggle";
 import { Slider } from "@mui/material";
 import "react-toggle/style.css";
-import { useState, useEffect, useRef } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdOutlineWbSunny, MdSunny, MdBrightnessAuto, MdBrightnessHigh,MdBrightnessLow } from "react-icons/md";
 import colores from "../../../../assets/img/colores.png";
 
 import "./edit.css";
 import Header from "../../../common/Header";
+import Navbar from "../../../common/Navbar";
 import mqtt from "mqtt-browser";
 import apic from "../../../../services/api";
+import Cookies from 'universal-cookie';
+
+const cookie = new Cookies();
 function LucesEdit() {
-  // ----------------------------- conexion con mqtt -----------------------------------------
 
-  const client = mqtt.connect("ws://192.168.1.81:8083/mqtt"); //ws://192.168.1.81:8083/mqtt
-  client.on("connect", () => {
-    console.log("Conectado al broker");
-    client.subscribe("domotica/luz/on-off", (err) => {
-      if (err) {
-        console.error("Error al suscribirse al topic de encendido/apagado:",err);
-      } else {
-        console.log("Suscripción exitosa al topic de on-off");
-      }
-    });
-
-    client.subscribe("domotica/luz/brillo", (err) => {
-      if (err) {
-        console.error("Error al suscribirse al topic de brillo:", err);
-      } else {
-        console.log("Suscripción exitosa al topic de brillo");
-      }
-    });
-
-    client.subscribe("domotica/luz/color", (err) => {
-      if (err) {
-        console.error("Error al suscribirse al topic de color:", err);
-      } else {
-        console.log("Suscripción exitosa al topic de color");
-      }
-    });
-  });
 
   //---------------------------- declaracion de varibles ---------------------------------
 
   const { id } = useParams(); // id
-  const [luzjson, setLuzjson] = useState({});  //json que recibe el post
   const [lucesData, setlucesData] = useState({});
   const [estado, setEstado] = useState(); //Este es para el  ESTADO tonggle switch
   const [brillo, setBrillo] = useState(); //Este para el  BRILLO slider
@@ -54,45 +28,77 @@ function LucesEdit() {
   const [circlePosition, setCirclePosition] = useState({ x: 0, y: 0 }); //circulo de colores
   const imgRef = useRef(null);
   
-
-  // ----------------------------------POST a la API -----------------------
-  const fetchData = async () => {
-    console.log("Dentro de fetchData");
-    try {
-      const luzis = await apic.get('/luces/' + id);
-      console.log("el json de la luz", luzis.luz);
-      setLuzjson(luzis.luz);
-      setlucesData({
-        nombre: luzis.luz.nombre,
-        estado: luzis.luz.estado,
-        brillo: luzis.luz.brillo,
-        programar: luzis.luz.programar,
-        color: luzis.luz.color,
-      });
-
-      
-
-    } catch (error) {
-      console.error('Error al obtener los datos de luces:', error);
+  useEffect(() => {
+    if (!cookie.get('id')) {
+      window.location.href = "./";
     }
-  };
+    // ----------------------------------GET a la API -----------------------
+    const fetchData = async () => {
+      try {
+        const luzis = await apic.get('/luces/' + id);
+        setlucesData({
+          nombre: luzis.luz.nombre,
+          estado: luzis.luz.estado,
+          brillo: luzis.luz.brillo,
+          programar: luzis.luz.programar,
+          color: luzis.luz.color,
+        });
+        setBrillo(luzis.luz.brillo);
+        setEstado(luzis.luz.estado);
+        setColor(luzis.luz.color);
+
+      } catch (error) {
+        console.error('Error al obtener los datos de luces:', error);
+      }
+    };
+    fetchData();
+  },[id]);
+
+  // ----------------------------- conexion con mqtt -----------------------------------------
+
+  const client = mqtt.connect("ws://192.168.1.81:8083/mqtt"); //ws://192.168.1.81:8083/mqtt
+  client.on("connect", () => {
+    console.log("Conectado al broker");
+    client.subscribe("domotica/luz/on-off", (err) => {
+      if (err) {console.error("Error al suscribirse al topic de encendido/apagado:",err);} 
+      else {console.log("Suscripción exitosa al topic de on-off");}
+    });
+
+    client.subscribe("domotica/luz/brillo", (err) => {
+      if (err) {console.error("Error al suscribirse al topic de brillo:", err);} 
+      else {console.log("Suscripción exitosa al topic de brillo");}
+    });
+
+    client.subscribe("domotica/luz/color", (err) => {
+      if (err) {console.error("Error al suscribirse al topic de color:", err);} 
+      else {console.log("Suscripción exitosa al topic de color");}
+    });
+  });
+
 
 
   //-------------------------------------- Metodo y funciones  --------------------------------------------
 
     //Encendido y apagado de las luces
-    const handleToggle = () => {
-      if(estado === false){
-        setEstado(true);
-        console.log("Encendiendo la luz", estado);
-        client.publish("domotica/luz/on-off", "true");
-      }
-      else if (estado === true){
-        setEstado(false);
-        console.log("Apagando la luz", estado);
-        client.publish("domotica/luz/on-off", "false");
-      }
-      console.log(estado);
+    const handleToggle = (event) => {
+      const newEstado = !estado; // Obtener el nuevo valor de estado
+      setEstado(newEstado); // Actualizar el estado
+      console.log("Estado de la luz:", newEstado);
+
+      // Actualizar solo el estado en lucesData
+      setlucesData(prevData => ({
+        ...prevData,
+        estado: newEstado
+      }));
+
+      // Publicar el estado en el broker MQTT
+      client.publish("domotica/luz/on-off", newEstado, (err) => {
+        if (err) {
+          console.error("Error al enviar el mensaje al broker:", err);
+        } else {
+          console.log("Mensaje enviado al broker correctamente");
+        }
+      });
     };
   
       //Intensidad de la luz
@@ -100,6 +106,10 @@ function LucesEdit() {
       setBrillo(newValue);
       console.log(brillo);
       console.log("Cambiando el brillo:", brillo);
+      setlucesData(prevData => ({
+        ...prevData,
+        brillo: brillo
+      }));
       client.publish("domotica/luz/brillo", brillo.toString(), (err) => {
         if (err) {
           console.error("Error al enviar el mensaje al broker:", err);
@@ -137,7 +147,10 @@ function LucesEdit() {
         e.nativeEvent.offsetY
       );
       setCirclePosition({ x: pixelPos.x, y: pixelPos.y });
-      
+      setlucesData(prevData => ({
+        ...prevData,
+        color: color
+      }));
       console.log("Cambiando el brillo:", color);
       client.publish("domotica/luz/color", color.toString());
     }
@@ -196,13 +209,8 @@ function LucesEdit() {
         y: "45%",
       });
     }
-
-
-
   
   useEffect(() => {
-
-    fetchData();
     //conexion MQTT
     client.on("message", (topic, message) => {
       console.log("Mensaje recibido en el topic ",topic,":",message.toString());
@@ -224,18 +232,30 @@ function LucesEdit() {
         //Aqui se actualiza el valor del brillo actualizarRangoBrillo();
       }
     });
-    console.log("DESDE useefect estado ", estado, " brillo", brillo, " color ", color);
 
     return () => {
       client.end(); // Cerrar la conexión MQTT al desmontar el componente
     };
-    
 
-  }, [estado, brillo, color]);
+  }, [estado, brillo, color, client]);
+
+  const putLuces = async (data) => {
+    try{console.log("Data desde el put",data);
+    await apic.put('/luces/'+id, data);}
+    catch (error) {
+      console.error('Error enviar las luces:', error);
+    }
+
+  };
+
+  console.log("lucesData",lucesData);
+  putLuces(lucesData);
+  const shouldRenderControls = brillo !== undefined && estado !== undefined;
 
   return (
     <div className="LucesEdit">
       <Header />
+      <Navbar />
       <div style={{ display: "flex", alignItems: "center" }}>
         <NavLink activeClassName="active" to="/luces" className="returnboton">
           <MdKeyboardArrowLeft size={40} style={{ color: "#2141df" }} />
@@ -245,12 +265,14 @@ function LucesEdit() {
       <div id="controlcontainer">
         <div className="controlluces">
           <span className="btitle">Estado</span>
-          <Toggle
-            defaultChecked={estado}
-            onChange={handleToggle}
-            icons={false}
-            className="my-toggle-class"
-          />
+          {shouldRenderControls && (
+            <Toggle
+              defaultChecked={estado}
+              onChange={handleToggle}
+              icons={false}
+              className="my-toggle-class"
+            />
+          )}
         </div>
         <div className="controlluces" id="programarContainer">
           <span className="text">
@@ -272,29 +294,31 @@ function LucesEdit() {
         <div id="brillocontrolcontainer">
           <span className="btitle">Brillo</span>
           <div id="slider">
-            <Slider
-              orientation="vertical"
-              value={brillo}
-              onChange={handleChange}
-              onMouseUp={handleMouseUp}
-              aria-labelledby="continuous-slider"
-              sx={{
-                color: "white",
-                borderRadius: 5,
-                height: "100%",
-                "& .MuiSlider-thumb": {
-                  marginBottom: -1.5,
-                  height: 7,
-                  width: 45,
-                  color: "#444",
-                  borderRadius: 3,
-                },
-                "& .MuiSlider-track": {
-                  borderRadius:
-                    brillo >= 95 || brillo <= 5 ? 5 : "0px 0px 22px 22px",
-                },
-              }}
-            />
+          {shouldRenderControls && (
+              <Slider
+                orientation="vertical"
+                value={brillo}
+                onChange={handleChange}
+                onMouseUp={handleMouseUp}
+                aria-labelledby="continuous-slider"
+                sx={{
+                  color: "white",
+                  borderRadius: 5,
+                  height: "100%",
+                  "& .MuiSlider-thumb": {
+                    marginBottom: -1.5,
+                    height: 7,
+                    width: 45,
+                    color: "#444",
+                    borderRadius: 3,
+                  },
+                  "& .MuiSlider-track": {
+                    borderRadius:
+                      brillo >= 95 || brillo <= 5 ? 5 : "0px 0px 22px 22px",
+                  },
+                }}
+              />
+            )}
             <div className="luzicono">
               <MdSunny size={30} /> {showValue && <span>{brillo}</span>}
               <MdOutlineWbSunny size={30} />
@@ -320,8 +344,7 @@ function LucesEdit() {
                   top: circlePosition.y,
                   left: circlePosition.x,
                   border: "2px solid black",
-                }}
-              ></div>
+                }}></div>
             )}
           </div>
           <div className="coloresboton">

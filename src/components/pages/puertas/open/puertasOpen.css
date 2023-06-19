@@ -1,11 +1,11 @@
-@import url('https://fonts.googleapis.com/css?family=Product+Sans');
+@import url("https://fonts.googleapis.com/css?family=Product+Sans");
 :root {
   --screen-width: calc(100vw - 16px);
-  --alto: calc(var(--screen-width)/4.5);
+  --alto: calc(var(--screen-width) / 4.5);
 }
 
 .PuertasOpen {
-  background-image: url('../../../../assets/img/bgpuertas.png');
+  background-image: url("../../../../assets/img/bgpuertas.png");
   background-size: cover;
   justify-content: center;
   align-items: center;
@@ -14,21 +14,40 @@
   margin: 0;
   padding-bottom: 15px;
   padding-top: 85px;
-  font-family:'Product Sans', sans-serif;
-  }
+  font-family: "Product Sans", sans-serif;
+}
 
-  .PuertasOpen #title{
-    color:aliceblue;
-    font-size: 3.5vh;
-    font-weight:500;
-    padding-left: 0px;
-    margin-top: -4px;
-  }
+.PuertasOpen #title {
+  color: aliceblue;
+  font-size: 3.5vh;
+  font-weight: 500;
+  padding-left: 0px;
+  margin-top: -4px;
+}
 
-  .PuertasOpen .fotoboton{
-    width: 50%;
-  padding-top: 50%;
+.PuertasOpen .fotoboton {
+  width: 15%;
+  padding-top: 15%;
+  position: absolute;
+  margin-top: -25%;
+  background-color: rgb(218, 24, 24);
+  border-radius: 100%;
+  border: 7px solid white;
+  left:40%;
+}
+.PuertasOpen .banner{
+  width:80%;
+  height: 45vh;
+  display: flex;
+  flex-direction: column;
+  
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+  padding: 20px;
   position: relative;
-  background-color: red;
+  background-color:white;
+  border-radius: 25px;
+  box-shadow: 0 0 15px 3px rgba(0, 0, 0, 0.5);
 
-  }
+}
